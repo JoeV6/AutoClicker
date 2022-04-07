@@ -1,2 +1,2 @@
 # AutoClicker
-Minecraft Autoclicker, still working on it, not finished
+Minecraft Autoclicker, Get all commands by typing /ac.
