@@ -46,6 +46,7 @@ import static com.LPC1.Lmod.AUTOCLICKER.*;
              Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac (on/off)"));
              Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac maxspeed (1-20)"));
              Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac minspeed (1-20)"));
+             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac cps (on / off)"));
              Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(""));
          }
          if (strings[0].equalsIgnoreCase("on")) {
@@ -62,6 +63,14 @@ import static com.LPC1.Lmod.AUTOCLICKER.*;
              MINSPEEDSET = false;
              ClickerON = false;
              Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Autoclicker turned off"));
+         }
+         if (strings[0].equalsIgnoreCase("cps") && strings[1].equalsIgnoreCase("off")) {
+             CPSCMD = false;
+             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("CPS counter turned off"));
+         }
+         if (strings[0].equalsIgnoreCase("cps") && strings[1].equalsIgnoreCase("on")) {
+             CPSCMD = true;
+             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("CPS counter turned on"));
          }
 
          if (strings[0].equalsIgnoreCase("maxspeed") && strings[1].matches("[0-9]+")) {
@@ -180,7 +189,7 @@ import static com.LPC1.Lmod.AUTOCLICKER.*;
                      ListGenerated = true;
                      TEMP = ClickCount;
                      System.out.println("Good List");
-                     if (CPS) {
+                     if (CPS && CPSCMD) {
                          Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("CPS : " + ClickCount));
                      }
 

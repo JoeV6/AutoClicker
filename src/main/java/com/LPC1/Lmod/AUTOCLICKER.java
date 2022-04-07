@@ -19,6 +19,7 @@ public class AUTOCLICKER {
     public static boolean ListGenerated = false;
     public static boolean FirstList = true;
     public static boolean CPS = false;
+    public static boolean CPSCMD = false;
 
     private static int Ticks = 0;
     private static int Seconds = 0;
