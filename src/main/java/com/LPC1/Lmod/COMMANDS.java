@@ -6,108 +6,180 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.LPC1.Lmod.AUTOCLICKER.*;
+
  public class COMMANDS implements ICommand {
 
-    @Override
-    public String getCommandName() {
-        return "Clicker";
-    }
+     static boolean MAXSPEEDSET = false;
+     static boolean MINSPEEDSET = false;
 
-    @Override
-    public String getCommandUsage(ICommandSender iCommandSender) {
-        return "Change autoclicker settings";
-    }
+     @Override
+     public String getCommandName() {
+         return "Clicker";
+     }
 
-    @Override
-    public List<String> getCommandAliases() {
-        List<String> Aliases = new ArrayList<String>();
-        Aliases.add("autoclicker");
-        Aliases.add("clicker");
-        Aliases.add("ac");
-        return Aliases;
-    }
+     @Override
+     public String getCommandUsage(ICommandSender iCommandSender) {
+         return "Change autoclicker settings";
+     }
 
-    @Override
-    public void processCommand(ICommandSender iCommandSender, String[] strings) throws CommandException {
-        if (strings.length == 0) {
-            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(""));
-            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac (on/off)"));
-            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac speed (1-20)"));
-            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(""));
-        }
-        if (strings[0].equalsIgnoreCase("on")) {
-            AUTOCLICKER.ClickerON = true;
-            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Autoclicker turned on"));
-        }
-        if (strings[0].equalsIgnoreCase("off")) {
-            AUTOCLICKER.ClickerON = false;
-            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Autoclicker turned off"));
-        }
-        if (strings[0].equalsIgnoreCase("speed") && strings[1].matches("[0-9]+")) {
+     @Override
+     public List<String> getCommandAliases() {
+         List<String> Aliases = new ArrayList<String>();
+         Aliases.add("autoclicker");
+         Aliases.add("clicker");
+         Aliases.add("ac");
+         return Aliases;
+     }
 
-            if (Integer.parseInt(strings[1]) < 21) {
-                AUTOCLICKER.ClickSpeed = Integer.parseInt(strings[1]);
-                System.out.println(AUTOCLICKER.ClickSpeed);
-                GenerateSequence(AUTOCLICKER.ClickSpeed, 20);
-                Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Autoclicker speed set to " + AUTOCLICKER.ClickSpeed));
-            } else {
-                Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac speed (1-20)"));
-            }
-        }
-    }
+     @Override
+     public void processCommand(ICommandSender iCommandSender, String[] strings) throws CommandException {
+         if (strings.length == 0) {
+             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(""));
+             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac (on/off)"));
+             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac maxspeed (1-20)"));
+             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac minspeed (1-20)"));
+             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(""));
+         }
+         if (strings[0].equalsIgnoreCase("on")) {
+             if (MAXSPEEDSET && MINSPEEDSET) {
+                 ClickerON = true;
+                 Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Autoclicker turned on"));
+                 GenerateSequence(MAXSpeed, MINSpeed, 20);
+             } else {
+                 Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("You need to set maxspeed and minspeed first"));
+             }
+         }
+         if (strings[0].equalsIgnoreCase("off")) {
+             MAXSPEEDSET = false;
+             MINSPEEDSET = false;
+             ClickerON = false;
+             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Autoclicker turned off"));
+         }
 
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender iCommandSender) {
-        return true;
-    }
+         if (strings[0].equalsIgnoreCase("maxspeed") && strings[1].matches("[0-9]+")) {
 
-    @Override
-    public List<String> addTabCompletionOptions(ICommandSender iCommandSender, String[] strings, BlockPos blockPos) {
-        return null;
-    }
+             if (Integer.parseInt(strings[1]) < 21) {
+                 MAXSPEEDSET = true;
+                 MAXSpeed = Integer.parseInt(strings[1]);
+                 Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Maximum speed set to " + Integer.parseInt(strings[1])));
 
-    @Override
-    public boolean isUsernameIndex(String[] strings, int i) {
-        return false;
-    }
+             } else {
 
-    @Override
-    public int compareTo(ICommand o) {
-        return 0;
-    }
+                 Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac maxspeed (1-20)"));
+             }
+         }
+         if (strings[0].equalsIgnoreCase("minspeed") && strings[1].matches("[0-9]+")) {
 
-    public void GenerateSequence(int C, int T) {
+             if (Integer.parseInt(strings[1]) < 21) {
+                 MINSPEEDSET = true;
+                 MINSpeed = Integer.parseInt(strings[1]);
+                 Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Minimum speed set to " + Integer.parseInt(strings[1])));
+
+             } else {
+
+                 Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac minspeed (1-20)"));
+             }
+         }
+     }
+
+     @Override
+     public boolean canCommandSenderUseCommand(ICommandSender iCommandSender) {
+         return true;
+     }
+
+     @Override
+     public List<String> addTabCompletionOptions(ICommandSender iCommandSender, String[] strings, BlockPos blockPos) {
+         return null;
+     }
+
+     @Override
+     public boolean isUsernameIndex(String[] strings, int i) {
+         return false;
+     }
+
+     @Override
+     public int compareTo(ICommand o) {
+         return 0;
+     }
+
+     public static void GenerateSequence(int MAX, int MIN, int T) {
+
+         if (MAXSPEEDSET && MINSPEEDSET && ClickerON) {
+
+             ClickCount = 0;
+             ListGenerated = false;
+             ClickList.clear();
+
+             for (int i = 0; i < T; i++) {
+
+                 Random r = new Random();
+                 int percentage = r.nextInt(100);
+
+                 if (FirstList) {
+
+                     if ((percentage > ((20 - (MIN + MAX) / 2)) / 0.20) && (ClickCount < MAXSpeed)) {
+
+                         ClickList.add(1);
+                         ClickCount++;
+
+                     } else {
+
+                         ClickList.add(0);
+                     }
+                 } else {
+                     if ((percentage > ((20 - (TEMP))) / 0.20) && (ClickCount < MAXSpeed)) {
+                         ClickList.add(1);
+                         ClickCount++;
+
+                     } else {
+
+                         ClickList.add(0);
+                     }
+                 }
+             }
+             System.out.println(ClickList);
+             System.out.println("CLICKCOUNT = " + ClickCount);
+             System.out.println("TEMP = " + TEMP);
 
 
-        int ClickCount = 0;
-        AUTOCLICKER.ListGenerated = false;
-        AUTOCLICKER.ClickList.clear();
+             if (!FirstList) {
 
-        for (int i = 0; i < T; i++) {
+                 if (TEMP == ClickCount || TEMP == (ClickCount + 1) || TEMP == (ClickCount - 1)) {
 
-            Random r = new Random();
-            int percentage = r.nextInt(100);
+                     ListGenerated = true;
+                     TEMP = ClickCount;
+                     System.out.println("Good List");
 
-            if ((percentage > ((20 - C) / 0.20)) && (ClickCount < AUTOCLICKER.ClickSpeed)) {
-                AUTOCLICKER.ClickList.add(1);
-                ClickCount++;
-            } else {
-                AUTOCLICKER.ClickList.add(0);
-            }
-        }
-        System.out.println(AUTOCLICKER.ClickList);
+                 } else {
 
-        if (ClickCount != C) {
-            GenerateSequence(AUTOCLICKER.ClickSpeed, 20);
+                     GenerateSequence(MAXSpeed, MINSpeed, 20);
 
-        } else {
-            AUTOCLICKER.ListGenerated = true;
-            System.out.println("Good List");
-        }
-    }
-}
+                 }
+
+             } else {
+
+                 if (MIN < ClickCount && ClickCount < MAX) {
+
+                     FirstList = false;
+                     ListGenerated = true;
+                     TEMP = ClickCount;
+                     System.out.println("Good First List");
+                     System.out.println("TEMP =" + TEMP);
+
+
+                 } else {
+
+                     GenerateSequence(MAXSpeed, MINSpeed, 20);
+
+                 }
+             }
+         }
+     }
+ }

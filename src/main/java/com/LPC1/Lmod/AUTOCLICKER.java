@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.ArrayList;
 
+import static com.LPC1.Lmod.COMMANDS.*;
 import static java.lang.Math.random;
 
 
@@ -16,8 +17,13 @@ public class AUTOCLICKER {
 
     public static boolean ClickerON = false;
     public static boolean ListGenerated = false;
+    public static boolean FirstList = true;
     private static int Ticks = 0;
-    public static int ClickSpeed = 0;
+    private static int Seconds = 0;
+    public static int ClickCount = 0;
+    public static int TEMP = 0;
+    public static int MAXSpeed = 0;
+    public static int MINSpeed = 0;
     public static ArrayList<Integer> ClickList = new ArrayList<Integer>();
 
 
@@ -26,7 +32,18 @@ public class AUTOCLICKER {
     @SubscribeEvent
     public void ClientTickEvent(TickEvent.ClientTickEvent event) {
 
-        if (Ticks == 20) { Ticks = 0; }
+        if (Ticks == 20) {
+            Ticks = 0;
+            Seconds++;
+            System.out.println(Seconds);
+        }
+
+        if (Seconds == 2 ) {
+            Seconds = 0;
+            if (AUTOCLICKER.ClickerON) {
+                GenerateSequence(AUTOCLICKER.MAXSpeed, AUTOCLICKER.MINSpeed, 20);
+            }
+        }
 
         if (ClickerON && ListGenerated && ClickList.get(Ticks) == 1) {
 
