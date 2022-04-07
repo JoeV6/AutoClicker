@@ -1,4 +1,4 @@
- package com.LPC1.Lmod;
+package com.LPC1.Lmod;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
@@ -16,8 +16,9 @@ import static com.LPC1.Lmod.AUTOCLICKER.*;
 
  public class COMMANDS implements ICommand {
 
-     static boolean MAXSPEEDSET = false;
-     static boolean MINSPEEDSET = false;
+     private static boolean MAXSPEEDSET = false;
+     private static boolean MINSPEEDSET = false;
+     private static final Random r = new Random();
 
      @Override
      public String getCommandName() {
@@ -66,10 +67,22 @@ import static com.LPC1.Lmod.AUTOCLICKER.*;
          if (strings[0].equalsIgnoreCase("maxspeed") && strings[1].matches("[0-9]+")) {
 
              if (Integer.parseInt(strings[1]) < 21) {
-                 MAXSPEEDSET = true;
-                 MAXSpeed = Integer.parseInt(strings[1]);
-                 Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Maximum speed set to " + Integer.parseInt(strings[1])));
 
+
+                 if (MINSPEEDSET) {
+
+                     if (Integer.parseInt(strings[1]) > MINSpeed) {
+                         MAXSPEEDSET = true;
+                         MAXSpeed = Integer.parseInt(strings[1]);
+                         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Maximum speed set to " + Integer.parseInt(strings[1])));
+                     } else {
+                         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Maximum speed needs to be bigger than Minimum speed"));
+                     }
+                 } else {
+                     MAXSPEEDSET = true;
+                     MAXSpeed = Integer.parseInt(strings[1]);
+                     Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Maximum speed set to " + Integer.parseInt(strings[1])));
+                 }
              } else {
 
                  Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac maxspeed (1-20)"));
@@ -78,10 +91,21 @@ import static com.LPC1.Lmod.AUTOCLICKER.*;
          if (strings[0].equalsIgnoreCase("minspeed") && strings[1].matches("[0-9]+")) {
 
              if (Integer.parseInt(strings[1]) < 21) {
-                 MINSPEEDSET = true;
-                 MINSpeed = Integer.parseInt(strings[1]);
-                 Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Minimum speed set to " + Integer.parseInt(strings[1])));
 
+                 if (MAXSPEEDSET) {
+
+                     if (Integer.parseInt(strings[1]) < MAXSpeed) {
+                         MINSPEEDSET = true;
+                         MINSpeed = Integer.parseInt(strings[1]);
+                         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Minimum speed set to " + Integer.parseInt(strings[1])));
+                     } else {
+                         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Minimum speed needs to be smaller than Maximum speed"));
+                     }
+                 } else {
+                     MINSPEEDSET = true;
+                     MINSpeed = Integer.parseInt(strings[1]);
+                     Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Minimum speed set to " + Integer.parseInt(strings[1])));
+                 }
              } else {
 
                  Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac minspeed (1-20)"));
@@ -119,7 +143,7 @@ import static com.LPC1.Lmod.AUTOCLICKER.*;
 
              for (int i = 0; i < T; i++) {
 
-                 Random r = new Random();
+
                  int percentage = r.nextInt(100);
 
                  if (FirstList) {
@@ -151,11 +175,15 @@ import static com.LPC1.Lmod.AUTOCLICKER.*;
 
              if (!FirstList) {
 
-                 if (TEMP == ClickCount || TEMP == (ClickCount + 1) || TEMP == (ClickCount - 1)) {
+                 if ((TEMP == ClickCount || TEMP == (ClickCount + 1) || TEMP == (ClickCount - 1)) && (MIN <= ClickCount && ClickCount <= MAX)) {
 
                      ListGenerated = true;
                      TEMP = ClickCount;
                      System.out.println("Good List");
+                     if (CPS) {
+                         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("CPS : " + ClickCount));
+                     }
+
 
                  } else {
 

@@ -18,12 +18,16 @@ public class AUTOCLICKER {
     public static boolean ClickerON = false;
     public static boolean ListGenerated = false;
     public static boolean FirstList = true;
+    public static boolean CPS = false;
+
     private static int Ticks = 0;
     private static int Seconds = 0;
+
     public static int ClickCount = 0;
     public static int TEMP = 0;
     public static int MAXSpeed = 0;
     public static int MINSpeed = 0;
+
     public static ArrayList<Integer> ClickList = new ArrayList<Integer>();
 
 
@@ -57,6 +61,7 @@ public class AUTOCLICKER {
     private void MouseClick() {
         if (minecraft.gameSettings.keyBindAttack.isKeyDown()) {
             minecraft.thePlayer.swingItem();
+            CPS = true;
             switch (minecraft.objectMouseOver.typeOfHit) {
                 case ENTITY:
                     minecraft.playerController.attackEntity(minecraft.thePlayer, minecraft.objectMouseOver.entityHit);
@@ -65,6 +70,6 @@ public class AUTOCLICKER {
                     minecraft.playerController.clickBlock(minecraft.objectMouseOver.getBlockPos(), minecraft.objectMouseOver.sideHit);
                     break;
             }
-        }
+        } else { CPS = false; }
     }
 }
