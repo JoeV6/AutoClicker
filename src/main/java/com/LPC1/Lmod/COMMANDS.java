@@ -48,10 +48,16 @@ import java.util.Random;
             AUTOCLICKER.ClickerON = false;
             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Autoclicker turned off"));
         }
-        if (strings[0].equalsIgnoreCase("speed") && strings[1].matches("[1-20]+")) {
-            AUTOCLICKER.ClickSpeed = Integer.parseInt(strings[1]);
-            GenerateSequence(AUTOCLICKER.ClickSpeed, 20);
-            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Autoclicker speed set to " + AUTOCLICKER.ClickSpeed));
+        if (strings[0].equalsIgnoreCase("speed") && strings[1].matches("[0-9]+")) {
+
+            if (Integer.parseInt(strings[1]) < 21) {
+                AUTOCLICKER.ClickSpeed = Integer.parseInt(strings[1]);
+                System.out.println(AUTOCLICKER.ClickSpeed);
+                GenerateSequence(AUTOCLICKER.ClickSpeed, 20);
+                Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Autoclicker speed set to " + AUTOCLICKER.ClickSpeed));
+            } else {
+                Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("ac speed (1-20)"));
+            }
         }
     }
 
@@ -77,23 +83,31 @@ import java.util.Random;
 
     public void GenerateSequence(int C, int T) {
 
-        for (int i = 0; i < T; i++) {
 
-            AUTOCLICKER.ListGenerated = false;
-            AUTOCLICKER.ClickList.clear();
+        int ClickCount = 0;
+        AUTOCLICKER.ListGenerated = false;
+        AUTOCLICKER.ClickList.clear();
+
+        for (int i = 0; i < T; i++) {
 
             Random r = new Random();
             int percentage = r.nextInt(100);
 
-            if (percentage < ((20 - C)/ 0.20 )) {
-                AUTOCLICKER.ClickList.add(0);
-            } else {
+            if ((percentage > ((20 - C) / 0.20)) && (ClickCount < AUTOCLICKER.ClickSpeed)) {
                 AUTOCLICKER.ClickList.add(1);
+                ClickCount++;
+            } else {
+                AUTOCLICKER.ClickList.add(0);
             }
+        }
+        System.out.println(AUTOCLICKER.ClickList);
 
-            System.out.print(AUTOCLICKER.ClickList);
+        if (ClickCount != C) {
+            GenerateSequence(AUTOCLICKER.ClickSpeed, 20);
 
+        } else {
             AUTOCLICKER.ListGenerated = true;
+            System.out.println("Good List");
         }
     }
 }

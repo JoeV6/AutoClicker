@@ -26,17 +26,14 @@ public class AUTOCLICKER {
     @SubscribeEvent
     public void ClientTickEvent(TickEvent.ClientTickEvent event) {
 
-        if (Ticks == 21) { Ticks = 0; }
+        if (Ticks == 20) { Ticks = 0; }
 
         if (ClickerON && ListGenerated && ClickList.get(Ticks) == 1) {
 
             MouseClick();
 
             }
-
         Ticks++;
-
-
         }
 
 
